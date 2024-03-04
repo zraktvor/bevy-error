@@ -4,8 +4,8 @@ use bevy::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_startup_system(load_gltf)
-        .add_system(setup)
+        .add_systems(Startup, load_gltf)
+        .add_systems(Update, setup)
         .run();
 }
 
@@ -25,7 +25,7 @@ fn setup(
     assets_gltf: Res<Assets<Gltf>>,
     assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
-    if !ev_asset.iter().any(|it| matches!(it, AssetEvent::Created { .. })) {
+    if !ev_asset.read().any(|it| matches!(it, AssetEvent::LoadedWithDependencies { .. })) {
         return;
     }
 
